@@ -1,8 +1,12 @@
 import { List, Paper } from "@mui/material";
 import React, { FC, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ChargingScreen } from ".";
+import {
+  useGetEntriesQuery,
+  useUpdateEntryMutation,
+} from "../../apis/entriesApi";
 import { EntryState } from "../../interfaces";
-import { changeStatus } from "../../slices/entriesSlice";
 import { toggleDragging } from "../../slices/UISlice";
 import { RootState } from "../../store";
 import { EntryCard } from "./EntryCard";
@@ -13,24 +17,26 @@ interface EntryListProps {
 }
 export const EntryList: FC<EntryListProps> = ({ status }) => {
   const dispatch = useDispatch();
-  const {
-    UI: { isDragging },
-    entries: { entries },
-  } = useSelector((state: RootState) => state);
+  const { data, isLoading } = useGetEntriesQuery();
+  const [updateEntry] = useUpdateEntryMutation();
+
+  const { isDragging } = useSelector((state: RootState) => state.UI);
 
   const entriesByStatus = useMemo(
-    () => entries.filter((entry) => entry.status === status),
-    [entries, status]
+    () => (data ?? []).filter((entry) => entry.status === status),
+    [data, status]
   );
 
   const onDropEntry = (e: React.DragEvent<HTMLDivElement>) => {
     const entryId = e.dataTransfer.getData("text/plain");
     dispatch(toggleDragging());
-    dispatch(changeStatus({ id: entryId, status }));
+    updateEntry({ _id: entryId, status });
   };
 
   return (
     <div onDrop={onDropEntry} onDragOver={(e) => e.preventDefault()}>
+      {isLoading && <ChargingScreen />}
+
       <Paper
         sx={{
           height: "calc(100vh - 180px)",

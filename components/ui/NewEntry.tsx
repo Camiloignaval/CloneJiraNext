@@ -3,31 +3,32 @@ import React, { FC } from "react";
 import SaveIcon from "@mui/icons-material/Save";
 import PostAddIcon from "@mui/icons-material/PostAdd";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addEntry } from "../../slices/entriesSlice";
 import { EntryState } from "../../interfaces";
 import { v4 as uuidv4 } from "uuid";
+import { useNewEntryMutation } from "../../apis/entriesApi";
 
 interface props {
   status: EntryState;
 }
 
 export const NewEntry: FC<props> = ({ status }) => {
-  const dispatch = useDispatch();
   const [isAdding, setIsAdding] = useState(false);
   const [inputValue, setinputValue] = useState("");
   const [touched, setTouched] = useState(false);
+  const [newEntry, stateNewEntry] = useNewEntryMutation();
+  // const { data, isLoading, refetch } = useGetEntriesQuery("1");
 
   const onSave = () => {
-    dispatch(
-      addEntry({
-        description: inputValue,
-        status,
-        _id: uuidv4(),
-        updatedAt: Date.now(),
-        createdAt: Date.now(),
-      })
-    );
+    // dispatch(
+    //   addEntry({
+    //     description: inputValue,
+    //     status,
+    //     _id: uuidv4(),
+    //     updatedAt: Date.now(),
+    //     createdAt: Date.now(),
+    //   })
+    // );
+    newEntry({ description: inputValue, status });
     setinputValue("");
     setIsAdding(false);
     setTouched(false);
