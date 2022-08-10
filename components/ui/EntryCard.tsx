@@ -10,6 +10,8 @@ import { FC } from "react";
 import { Entry } from "../../interfaces";
 import { useDispatch } from "react-redux";
 import { toggleDragging } from "../../slices/UISlice";
+import { useRouter } from "next/router";
+import { dateFunction } from "../../utils";
 
 interface props {
   entry: Entry;
@@ -17,6 +19,7 @@ interface props {
 
 export const EntryCard: FC<props> = ({ entry }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     dispatch(toggleDragging());
@@ -29,6 +32,7 @@ export const EntryCard: FC<props> = ({ entry }) => {
       draggable
       onDragStart={onDragStart}
       onDragEnd={() => dispatch(toggleDragging())}
+      onClick={() => router.push(`/entries/${entry._id}`)}
     >
       <CardActionArea>
         <CardContent>
@@ -40,7 +44,10 @@ export const EntryCard: FC<props> = ({ entry }) => {
           sx={{ display: "flex", justifyContent: "end", paddingRight: 2 }}
         >
           <Typography variant="body2">
-            {dayjs(entry.createdAt).format("DD/MM/YYYY")}
+            {/* {dayjs(entry.createdAt).format("DD/MM/YYYY")} */}
+            {dateFunction.getFormatDistanceToNow(
+              Date.parse(entry.createdAt.toString())
+            )}
           </Typography>
         </CardActions>
       </CardActionArea>

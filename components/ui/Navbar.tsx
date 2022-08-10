@@ -1,8 +1,16 @@
-import { AppBar, Button, IconButton, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Button,
+  IconButton,
+  Link,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { FC } from "react";
 import { useDispatch } from "react-redux";
 import { toggleSideBar } from "../../slices/UISlice";
+import NextLink from "next/link";
 
 export const Navbar: FC = () => {
   const dispatch = useDispatch();
@@ -22,7 +30,11 @@ export const Navbar: FC = () => {
           />
         </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          CloneJira
+          <NextLink href="/">
+            <Link underline="none" color="white">
+              CloneJira
+            </Link>
+          </NextLink>
         </Typography>
         <Button color="inherit">Login</Button>
       </Toolbar>

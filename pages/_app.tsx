@@ -4,6 +4,7 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { darkTheme, lightTheme } from "../themes";
 import { store } from "../store";
 import { Provider } from "react-redux";
+import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,6 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <Component {...pageProps} />
+        <Toaster position="top-right" />
       </ThemeProvider>
     </Provider>
   );

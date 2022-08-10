@@ -17,6 +17,12 @@ mongodb://localhost:27017/entriesdb
 
 Renombrar el archivo **.env.tmeplate** a **.env**
 
+- Reconstruir los modulos de node
+
+```
+npm install
+```
+
 ## Llenar la base de datos con información de pruebas
 
 Llamar a :
