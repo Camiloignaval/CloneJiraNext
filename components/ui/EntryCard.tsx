@@ -23,7 +23,10 @@ export const EntryCard: FC<props> = ({ entry }) => {
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     dispatch(toggleDragging());
-    e.dataTransfer.setData("text/plain", entry._id);
+    e.dataTransfer.setData(
+      "text/plain",
+      JSON.stringify({ _id: entry._id, status: entry.status })
+    );
   };
 
   return (

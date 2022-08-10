@@ -1,13 +1,12 @@
 import { List, Paper } from "@mui/material";
-import React, { FC, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { FC, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { ChargingScreen } from ".";
 import {
   useGetEntriesQuery,
   useUpdateEntryMutation,
 } from "../../apis/entriesApi";
 import { EntryState } from "../../interfaces";
-import { toggleDragging } from "../../slices/UISlice";
 import { RootState } from "../../store";
 import { EntryCard } from "./EntryCard";
 import styles from "./EntryList.module.css";
@@ -16,11 +15,11 @@ interface EntryListProps {
   status: EntryState;
 }
 export const EntryList: FC<EntryListProps> = ({ status }) => {
-  const dispatch = useDispatch();
   const { data, isLoading } = useGetEntriesQuery();
   const [updateEntry] = useUpdateEntryMutation();
 
   const { isDragging } = useSelector((state: RootState) => state.UI);
+  const [isSameState, setIsSameState] = useState(false);
 
   const entriesByStatus = useMemo(
     () => (data ?? []).filter((entry) => entry.status === status),
@@ -28,9 +27,11 @@ export const EntryList: FC<EntryListProps> = ({ status }) => {
   );
 
   const onDropEntry = (e: React.DragEvent<HTMLDivElement>) => {
-    const entryId = e.dataTransfer.getData("text/plain");
-    dispatch(toggleDragging());
-    updateEntry({ _id: entryId, status });
+    const entryData = e.dataTransfer.getData("text/plain");
+    const dataParseada = JSON.parse(entryData);
+    if (dataParseada.status !== status) {
+      updateEntry({ _id: dataParseada._id, status });
+    }
   };
 
   return (
